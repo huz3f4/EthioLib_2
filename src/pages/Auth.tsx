@@ -147,7 +147,7 @@ export default function Auth() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center space-x-2 bg-indigo-600 text-white py-4 rounded-2xl font-bold hover:bg-indigo-700 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-indigo-100 mt-6 disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full flex items-center justify-center space-x-2 bg-forest-600 text-white py-4 rounded-2xl font-bold hover:bg-forest-700 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-forest-100 mt-6 disabled:cursor-not-allowed disabled:opacity-60"
             >
               <span>{loading ? (isLogin ? 'Signing In…' : 'Creating Account…') : isLogin ? 'Sign In' : 'Create Account'}</span>
               <ArrowRight size={18} />
@@ -159,7 +159,7 @@ export default function Auth() {
             <button
               type="button"
               onClick={() => setIsLogin(!isLogin)}
-              className="text-indigo-600 font-bold hover:underline"
+              className="text-forest-600 font-bold hover:underline"
             >
               {isLogin ? 'Sign Up' : 'Sign In'}
             </button>

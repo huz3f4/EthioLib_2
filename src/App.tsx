@@ -10,6 +10,7 @@ import Education from '@/src/pages/Education';
 import Fiction from '@/src/pages/Fiction';
 import Auth from '@/src/pages/Auth';
 import Library from '@/src/pages/Library';
+import Search from '@/src/pages/Search';
 import { motion, AnimatePresence } from 'motion/react';
 import { AuthProvider } from '@/src/contexts/AuthContext';
 
@@ -27,6 +28,7 @@ export default function App() {
                 <Route path="/fiction" element={<Fiction />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/library" element={<Library />} />
+                <Route path="/search" element={<Search />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </AnimatePresence>

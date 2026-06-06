@@ -4,52 +4,66 @@
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 
-  --color-surface-dim: #060e20;
-  --color-surface-bright: #1f2b49;
-  --color-surface-container-lowest: #000000;
-  --color-surface-container-low: #091328;
-  --color-surface-container: #0f1930;
-  --color-surface-container-high: #141f38;
-  --color-surface-container-highest: #192540;
+  --color-primary: #1E4035;
+  --color-primary-dim: #1A3530;
+  --color-primary-container: #2E6B55;
+  --color-on-primary: #FFFFFF;
   
-  --color-on-surface: #dee5ff;
-  --color-on-surface-variant: #a3aac4;
+  --color-surface: #FAFAF7;
+  --color-surface-dim: #F0E8D5;
+  --color-surface-bright: #FFFFFF;
+  --color-surface-container: #F0E8D5;
+  --color-surface-container-high: #E8DCC6;
+  --color-surface-container-highest: #E0D0B8;
   
-  --color-primary: #85adff;
-  --color-primary-dim: #699cff;
-  --color-primary-container: #6e9fff;
-  --color-on-primary: #002c66;
+  --color-on-surface: #1E4035;
+  --color-on-surface-variant: #7A6A42;
   
-  --color-secondary: #8097ff;
-  --color-secondary-container: #213da1;
-  --color-on-secondary-container: #c5ceff;
+  --color-secondary: #2E6B55;
+  --color-secondary-container: #C9AA71;
+  --color-on-secondary-container: #FFFFFF;
   
-  --color-tertiary: #fbabff;
-  --color-outline: #6d758c;
-  --color-outline-variant: #40485d;
+  --color-tertiary: #C9AA71;
+  --color-accent: #C9AA71;
+  
+  --color-outline: #A39893;
+  --color-outline-variant: #D4C8BD;
+
+  --color-parchment: #F0E8D5;
+  --color-stone-400: #C9AA71;
+  --color-stone-500: #C9AA71;
+  --color-stone-600: #B8995F;
+  --color-forest-50: #F0E8D5;
+  --color-forest-100: #F0E8D5;
+  --color-forest-200: #E8DCC6;
+  --color-forest-400: #2E6B55;
+  --color-forest-500: #2E6B55;
+  --color-forest-600: #1E4035;
+  --color-forest-700: #1A3530;
+  --color-forest-900: #0F1F1D;
 }
 
 @layer utilities {
   .glass-nav {
-    background: rgba(6, 14, 32, 0.6);
+    background: rgba(30, 64, 53, 0.9);
     backdrop-filter: blur(24px);
   }
   
   .editorial-shadow {
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 20px 40px rgba(30, 64, 53, 0.12);
   }
   
   .ghost-border {
-    outline: 1px solid rgba(64, 72, 93, 0.15);
+    outline: 1px solid rgba(212, 200, 189, 0.3);
   }
   
   .primary-gradient {
-    background: linear-gradient(135deg, #85adff 0%, #6e9fff 100%);
+    background: linear-gradient(135deg, #1E4035 0%, #2E6B55 100%);
   }
 }
 
 body {
-  @apply bg-surface-dim text-on-surface font-sans antialiased selection:bg-primary-container selection:text-on-primary;
+  @apply bg-[#FAFAF7] text-on-surface font-sans antialiased selection:bg-accent selection:text-white;
 }
 
 /* ========== BUTTON STYLES ========== */

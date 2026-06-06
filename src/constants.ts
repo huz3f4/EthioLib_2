@@ -93,3 +93,5 @@ export const FICTION_BOOKS: Book[] = [
     description: 'One of the greatest love stories in Ethiopian literature.'
   }
 ];
+
+export const books = [...CURRICULUM_BOOKS, ...FICTION_BOOKS];

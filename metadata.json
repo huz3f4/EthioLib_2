@@ -1,0 +1,6 @@
+{
+  "name": "EthioLib",
+  "description": "A modern digital library for Ethiopian students, providing access to the new curriculum textbooks, teacher guides, and a wide range of fiction and non-fiction books.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

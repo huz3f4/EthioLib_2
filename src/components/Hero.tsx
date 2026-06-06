@@ -7,8 +7,8 @@ export default function Hero() {
     <section className="relative pt-20 pb-20 overflow-hidden">
       {/* Background Orbs */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[60%] bg-indigo-50 rounded-full blur-3xl opacity-50" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[30%] h-[50%] bg-amber-50 rounded-full blur-3xl opacity-50" />
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[60%] bg-[#F0E8D5] rounded-full blur-3xl opacity-50" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[30%] h-[50%] bg-[#C9AA71]/10 rounded-full blur-3xl opacity-50" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
@@ -17,7 +17,7 @@ export default function Hero() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center space-x-2 bg-indigo-50 text-indigo-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-6 border border-indigo-100"
+            className="inline-flex items-center space-x-2 bg-[#F0E8D5] text-[#1E4035] px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-6 border border-[#C9AA71]/20"
           >
             <GraduationCap size={14} />
             <span>Empowering Ethiopian Students</span>
@@ -29,7 +29,7 @@ export default function Hero() {
             transition={{ delay: 0.1 }}
             className="text-5xl md:text-7xl font-black text-gray-900 leading-[1.1] tracking-tight mb-6"
           >
-            Your Digital <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600">Library</span> for Every Grade.
+            Your Digital <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#1E4035] to-[#2E6B55]">Library</span> for Every Grade.
           </motion.h1>
           
           <motion.p
@@ -53,12 +53,12 @@ export default function Hero() {
               <input
                 type="text"
                 placeholder="Search for subjects, grades or books..."
-                className="w-full pl-12 pr-6 py-4 rounded-2xl bg-white border border-gray-100 shadow-xl shadow-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                className="w-full pl-12 pr-6 py-4 rounded-2xl bg-white border border-gray-100 shadow-xl shadow-gray-100 focus:outline-none focus:ring-2 focus:ring-[#1E4035] transition-all"
               />
             </div>
             <Link
               to="/educational"
-              className="w-full sm:w-auto flex items-center justify-center space-x-2 bg-indigo-600 text-white px-8 py-4 rounded-2xl font-bold hover:bg-indigo-700 hover:scale-105 active:scale-95 transition-all shadow-xl shadow-indigo-100"
+              className="w-full sm:w-auto flex items-center justify-center space-x-2 bg-[#1E4035] text-white px-8 py-4 rounded-2xl font-bold hover:bg-[#2E6B55] hover:scale-105 active:scale-95 transition-all shadow-xl shadow-[#1E4035]/20"
             >
               <span>Explore Curriculum</span>
               <ArrowRight size={20} />

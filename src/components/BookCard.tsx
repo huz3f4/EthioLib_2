@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { Download, Heart, GraduationCap, ChevronRight } from 'lucide-react';
+import { Download, GraduationCap, ChevronRight } from 'lucide-react';
 import { Book } from '@/src/constants';
 import { cn } from '@/src/lib/utils';
 import { useState } from 'react';
@@ -12,7 +12,6 @@ interface BookCardProps {
 
 export default function BookCard({ book, index }: BookCardProps) {
   const [isHovered, setIsHovered] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
 
   return (
     <motion.div
@@ -21,7 +20,7 @@ export default function BookCard({ book, index }: BookCardProps) {
       transition={{ delay: index * 0.05 }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="group relative bg-white rounded-2xl overflow-hidden border border-gray-100 transition-all hover:shadow-2xl hover:shadow-indigo-100 flex flex-col h-full"
+      className="group relative bg-surface-bright rounded-2xl overflow-hidden border border-outline-variant transition-all hover:shadow-2xl hover:shadow-primary/10 flex flex-col h-full"
     >
       {/* Badge for Curriculum/Teacher Guide */}
       {book.category === 'curriculum' && (
@@ -29,24 +28,13 @@ export default function BookCard({ book, index }: BookCardProps) {
           <span className={cn(
             "px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-sm",
             book.is_teachers_guide 
-              ? "bg-amber-100 text-amber-700" 
-              : "bg-indigo-100 text-indigo-700"
+              ? "bg-accent text-white" 
+              : "bg-surface-container text-primary"
           )}>
             {book.is_teachers_guide ? "Teacher Guide" : `Grade ${book.grade_level}`}
           </span>
         </div>
       )}
-
-      {/* Favorite Button */}
-      <button
-        onClick={() => setIsFavorite(!isFavorite)}
-        className={cn(
-          "absolute top-3 right-3 z-10 p-2 rounded-full backdrop-blur-md transition-all",
-          isFavorite ? "bg-red-50 text-red-500" : "bg-black/5 text-white hover:bg-black/20"
-        )}
-      >
-        <Heart size={16} fill={isFavorite ? "currentColor" : "none"} />
-      </button>
 
       {/* Image Container */}
       <div className="relative aspect-[3/4] overflow-hidden">
@@ -69,7 +57,7 @@ export default function BookCard({ book, index }: BookCardProps) {
             href={book.download_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center space-x-2 bg-white text-gray-900 px-4 py-2 rounded-full text-sm font-semibold shadow-xl hover:bg-indigo-600 hover:text-white transition-colors"
+            className="flex items-center space-x-2 bg-surface-bright text-on-surface px-4 py-2 rounded-full text-sm font-semibold shadow-xl hover:bg-primary hover:text-white transition-colors"
           >
             <span>Read Now</span>
             <ChevronRight size={16} />
@@ -80,21 +68,21 @@ export default function BookCard({ book, index }: BookCardProps) {
       {/* Content */}
       <div className="p-4 flex flex-col flex-grow">
         <div className="flex-grow">
-          <p className="text-[10px] font-bold text-indigo-600 uppercase tracking-widest mb-1">
+          <p className="text-[10px] font-bold text-accent uppercase tracking-widest mb-1">
             {book.genre || book.category}
           </p>
-          <h3 className="text-sm font-bold text-gray-900 line-clamp-2 leading-tight mb-1 group-hover:text-indigo-600 transition-colors">
+          <h3 className="text-sm font-bold text-on-surface line-clamp-2 leading-tight mb-1 group-hover:text-secondary transition-colors">
             {book.title}
           </h3>
-          <p className="text-xs text-gray-500 mb-2">{book.author}</p>
+          <p className="text-xs text-on-surface-variant mb-2">{book.author}</p>
         </div>
         
-        <div className="pt-3 border-t border-gray-50 flex items-center justify-between">
-          <div className="flex items-center space-x-1 text-gray-400">
+        <div className="pt-3 border-t border-outline-variant flex items-center justify-between">
+          <div className="flex items-center space-x-1 text-on-surface-variant">
             <GraduationCap size={14} />
             <span className="text-[10px] font-medium">Curriculum Authored</span>
           </div>
-          <button className="text-gray-400 hover:text-indigo-600 transition-colors">
+          <button className="text-on-surface-variant hover:text-secondary transition-colors">
             <Download size={16} />
           </button>
         </div>

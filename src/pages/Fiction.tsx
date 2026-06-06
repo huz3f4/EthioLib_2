@@ -13,20 +13,20 @@ export default function Fiction() {
   );
 
   return (
-    <div className="bg-[#FAFAFA] min-h-screen pb-20">
+    <div className="bg-surface min-h-screen pb-20">
       {/* Header */}
-      <section className="bg-gray-900 py-24 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-1/3 h-full bg-indigo-600 skew-x-[-15deg] translate-x-1/4 opacity-20 pointer-events-none" />
+      <section className="bg-primary py-24 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-1/3 h-full bg-primary-container skew-x-[-15deg] translate-x-1/4 opacity-20 pointer-events-none" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-2xl">
-            <div className="flex items-center space-x-2 text-indigo-400 font-bold mb-4">
+            <div className="flex items-center space-x-2 text-accent font-bold mb-4">
               <Sparkles size={20} />
               <span className="uppercase tracking-widest text-xs">Cultural Collection</span>
             </div>
             <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight mb-6">
               Fiction & Literature
             </h1>
-            <p className="text-gray-400 text-lg leading-relaxed">
+            <p className="text-on-primary/70 text-lg leading-relaxed">
               Discover the rich tapestry of Ethiopian storytelling. From historical epics to 
               modern drama, explore books that define our culture and imagination.
             </p>
@@ -38,15 +38,15 @@ export default function Fiction() {
         {/* Sidebar Filter */}
         <aside className="w-full md:w-64 space-y-8">
           <div>
-            <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Genres</h3>
+            <h3 className="text-xs font-black text-on-surface-variant uppercase tracking-widest mb-4">Genres</h3>
             <div className="space-y-1">
               <button
                 onClick={() => setSelectedGenre('all')}
                 className={cn(
                   "w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold transition-all",
                   selectedGenre === 'all' 
-                    ? "bg-indigo-600 text-white shadow-lg shadow-indigo-100" 
-                    : "text-gray-600 hover:bg-white hover:text-indigo-600"
+                    ? "bg-primary text-white shadow-lg shadow-primary/20" 
+                    : "text-on-surface-variant hover:bg-surface-bright hover:text-secondary"
                 )}
               >
                 <span>All Genres</span>
@@ -59,8 +59,8 @@ export default function Fiction() {
                   className={cn(
                     "w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold transition-all",
                     selectedGenre === genre
-                      ? "bg-indigo-600 text-white shadow-lg shadow-indigo-100" 
-                      : "text-gray-600 hover:bg-white hover:text-indigo-600"
+                      ? "bg-primary text-white shadow-lg shadow-primary/20" 
+                      : "text-on-surface-variant hover:bg-surface-bright hover:text-secondary"
                   )}
                 >
                   <span>{genre}</span>
@@ -70,10 +70,10 @@ export default function Fiction() {
             </div>
           </div>
           
-          <div className="bg-indigo-50 p-6 rounded-3xl border border-indigo-100">
-            <h4 className="text-indigo-900 font-black text-sm mb-2">Request a Book</h4>
-            <p className="text-indigo-600 text-xs mb-4">Can't find a specific title? Let us know and we'll try to find it.</p>
-            <button className="w-full bg-indigo-600 text-white text-xs font-bold py-3 rounded-xl hover:bg-indigo-700 transition-colors">
+          <div className="bg-surface-container p-6 rounded-3xl border border-outline-variant">
+            <h4 className="text-primary font-black text-sm mb-2">Request a Book</h4>
+            <p className="text-on-surface-variant text-xs mb-4">Can't find a specific title? Let us know and we'll try to find it.</p>
+            <button className="w-full bg-primary text-white text-xs font-bold py-3 rounded-xl hover:bg-primary-container transition-colors">
               Submit Request
             </button>
           </div>
@@ -88,8 +88,8 @@ export default function Fiction() {
               ))}
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center py-20 bg-white rounded-[2rem] border border-gray-100">
-              <p className="text-gray-500 font-medium">Coming soon to this category!</p>
+            <div className="flex flex-col items-center justify-center py-20 bg-surface-bright rounded-[2rem] border border-outline-variant">
+              <p className="text-on-surface-variant font-medium">Coming soon to this category!</p>
             </div>
           )}
         </main>

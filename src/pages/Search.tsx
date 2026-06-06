@@ -24,8 +24,8 @@ export default function Search() {
     const timer = setTimeout(() => {
       const lowerQuery = query.toLowerCase();
       const filtered = allBooks.filter((book) => 
-        book.title.toLowerCase().includes(lowerQuery) ||
-        book.author.toLowerCase().includes(lowerQuery) ||
+        book.title?.toLowerCase().includes(lowerQuery) ||
+        book.author?.toLowerCase().includes(lowerQuery) ||
         book.description?.toLowerCase().includes(lowerQuery)
       );
       setResults(filtered);
@@ -39,7 +39,7 @@ export default function Search() {
     <div className="min-h-screen bg-white pt-20 pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Back Button */}
-        <Link to="/" className="inline-flex items-center space-x-2 text-gray-600 hover:text-indigo-600 transition-colors mb-8">
+        <Link to="/" className="inline-flex items-center space-x-2 text-gray-600 hover:text-[#1E4035] transition-colors mb-8">
           <ArrowLeft size={20} />
           <span>Back to Home</span>
         </Link>
@@ -51,7 +51,7 @@ export default function Search() {
           className="mb-12"
         >
           <div className="flex items-center space-x-3 mb-4">
-            <SearchIcon size={28} className="text-indigo-600" />
+            <SearchIcon size={28} className="text-[#1E4035]" />
             <h1 className="text-4xl font-bold text-gray-900">
               Search Results
             </h1>
@@ -65,7 +65,7 @@ export default function Search() {
         {isSearching ? (
           <div className="text-center py-12">
             <div className="inline-block">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1E4035]"></div>
             </div>
             <p className="text-gray-600 mt-4">Searching...</p>
           </div>
@@ -104,7 +104,7 @@ export default function Search() {
             animate={{ opacity: 1 }}
             className="text-gray-600 mt-8 text-center"
           >
-            Found <span className="font-bold text-indigo-600">{results.length}</span> book{results.length !== 1 ? 's' : ''}
+            Found <span className="font-bold text-[#1E4035]">{results.length}</span> book{results.length !== 1 ? 's' : ''}
           </motion.p>
         )}
       </div>

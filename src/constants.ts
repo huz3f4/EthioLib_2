@@ -94,4 +94,17 @@ export const FICTION_BOOKS: Book[] = [
   }
 ];
 
-export const books = [...CURRICULUM_BOOKS, ...FICTION_BOOKS];
+export const NEW_ARRIVALS: Book[] = [
+  {
+    id: 'n1',
+    title: 'Sapiens: A Brief History of Humankind',
+    author: 'Yuval Noah Harari',
+    cover_url: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=80&w=400',
+    category: 'non-fiction',
+    genre: 'History',
+    download_url: '#',
+    description: 'Explores the history of humankind from the evolution of archaic human species in the Stone Age up to the twenty-first century.'
+  }
+];
+
+export const books = [...CURRICULUM_BOOKS, ...FICTION_BOOKS, ...NEW_ARRIVALS];

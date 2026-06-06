@@ -5,6 +5,7 @@ import { motion } from 'motion/react';
 import { useAuth } from '@/src/contexts/AuthContext';
 import { getSupabase } from '@/src/lib/supabase';
 import BookCard from '@/src/components/BookCard';
+import { books as staticBooks } from '@/src/constants';
 
 interface Book {
   id: string;
@@ -108,14 +109,14 @@ export default function Library() {
 
   if (loading) {
     return (
-      <div className="min-h-[calc(100vh-64px)] bg-[#FAFAFA] flex items-center justify-center">
+      <div className="min-h-[calc(100vh-64px)] bg-[#FAFAF7] flex items-center justify-center">
         <div className="text-gray-500 font-bold">Loading your library...</div>
       </div>
     );
   }
 
   return (
-    <div className="bg-[#FAFAFA] min-h-[calc(100vh-64px)] pb-20">
+    <div className="bg-[#FAFAF7] min-h-[calc(100vh-64px)] pb-20">
       {/* Header */}
       <section className="bg-white border-b border-gray-100 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -151,7 +152,7 @@ export default function Library() {
             </p>
             <a
               href="/educational"
-              className="inline-flex items-center space-x-2 bg-indigo-600 text-white px-6 py-3 rounded-2xl font-bold hover:bg-indigo-700 transition-all"
+              className="inline-flex items-center space-x-2 bg-[#1E4035] text-white px-6 py-3 rounded-2xl font-bold hover:bg-[#2E6B55] transition-all shadow-xl shadow-[#1E4035]/20"
             >
               <span>Explore Books</span>
             </a>

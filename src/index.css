@@ -16,8 +16,10 @@
   --color-surface-container-high: #E8DCC6;
   --color-surface-container-highest: #E0D0B8;
   
-  --color-on-surface: #1E4035;
-  --color-on-surface-variant: #7A6A42;
+  --color-parchment: #FAFAF7;
+  
+  --color-on-surface: #2B2420;
+  --color-on-surface-variant: #6B6560;
   
   --color-secondary: #2E6B55;
   --color-secondary-container: #C9AA71;
@@ -28,24 +30,31 @@
   
   --color-outline: #A39893;
   --color-outline-variant: #D4C8BD;
+}
 
-  --color-parchment: #F0E8D5;
-  --color-stone-400: #C9AA71;
-  --color-stone-500: #C9AA71;
-  --color-stone-600: #B8995F;
-  --color-forest-50: #F0E8D5;
-  --color-forest-100: #F0E8D5;
-  --color-forest-200: #E8DCC6;
-  --color-forest-400: #2E6B55;
-  --color-forest-500: #2E6B55;
-  --color-forest-600: #1E4035;
-  --color-forest-700: #1A3530;
-  --color-forest-900: #0F1F1D;
+.dark {
+  --color-primary: #2E6B55;
+  --color-primary-dim: #40896F;
+  --color-on-primary: #FFFFFF;
+
+  --color-surface: #0A120E;
+  --color-surface-dim: #141F1A;
+  --color-surface-bright: #1A2621;
+  --color-surface-container: #16261E;
+  --color-surface-container-high: #20332A;
+  
+  --color-parchment: #0A120E;
+  
+  --color-on-surface: #F0E8D5;
+  --color-on-surface-variant: #A39893;
+  
+  --color-outline: #2E3B35;
+  --color-outline-variant: #1A2621;
 }
 
 @layer utilities {
   .glass-nav {
-    background: rgba(30, 64, 53, 0.9);
+    background: rgba(250, 250, 247, 0.7);
     backdrop-filter: blur(24px);
   }
   
@@ -63,7 +72,7 @@
 }
 
 body {
-  @apply bg-[#FAFAF7] text-on-surface font-sans antialiased selection:bg-accent selection:text-white;
+  @apply bg-parchment text-on-surface font-sans antialiased selection:bg-stone-400 selection:text-white;
 }
 
 /* ========== BUTTON STYLES ========== */

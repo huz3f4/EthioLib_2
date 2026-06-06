@@ -1,6 +1,6 @@
 import { FormEvent, useState } from 'react';
 import { motion } from 'motion/react';
-import { Mail, Lock, User, Chrome, ArrowRight } from 'lucide-react';
+import { Mail, Lock, User, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { getSupabase } from '@/src/lib/supabase';
 
@@ -67,41 +67,22 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-[#FAFAFA] flex items-center justify-center p-4">
+    <div className="min-h-[calc(100vh-64px)] bg-surface flex items-center justify-center p-4">
       <div className="max-w-md w-full">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-[2.5rem] p-8 md:p-12 shadow-2xl shadow-gray-200 border border-gray-50"
+          className="bg-surface-bright rounded-[2.5rem] p-8 md:p-12 shadow-2xl shadow-primary/5 border border-outline-variant"
         >
           <div className="text-center mb-10">
-            <h1 className="text-3xl font-black text-gray-900 mb-3">
+            <h1 className="text-3xl font-black text-on-surface mb-3">
               {isLogin ? 'Welcome Back' : 'Create Account'}
             </h1>
-            <p className="text-gray-500 text-sm">
+            <p className="text-on-surface-variant text-sm">
               {isLogin
                 ? 'Sign in to access your personal library and favorites'
                 : 'Join EthioLib to start organizing your digital bookshelf'}
             </p>
-          </div>
-
-          <div className="space-y-4 mb-8">
-            <button
-              type="button"
-              className="w-full flex items-center justify-center space-x-3 bg-white border border-gray-100 py-3.5 rounded-2xl text-sm font-bold text-gray-700 hover:bg-gray-50 transition-all shadow-sm"
-            >
-              <Chrome size={18} className="text-red-500" />
-              <span>Continue with Google</span>
-            </button>
-          </div>
-
-          <div className="relative mb-8">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-100"></div>
-            </div>
-            <div className="relative flex justify-center text-xs font-bold uppercase tracking-widest">
-              <span className="bg-white px-4 text-gray-400">Or email</span>
-            </div>
           </div>
 
           <form className="space-y-4" onSubmit={handleSubmit}>
@@ -113,7 +94,7 @@ export default function Auth() {
                   placeholder="Full Name"
                   value={fullName}
                   onChange={(event) => setFullName(event.target.value)}
-                  className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all text-sm"
+                  className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-surface-container border-transparent focus:bg-surface-bright focus:ring-2 focus:ring-primary focus:border-transparent transition-all text-sm text-on-surface"
                 />
               </div>
             )}
@@ -124,7 +105,7 @@ export default function Auth() {
                 placeholder="Email Address"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
-                className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all text-sm"
+                className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-surface-container border-transparent focus:bg-surface-bright focus:ring-2 focus:ring-primary focus:border-transparent transition-all text-sm text-on-surface"
               />
             </div>
             <div className="relative">
@@ -134,7 +115,7 @@ export default function Auth() {
                 placeholder="Password"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
-                className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all text-sm"
+                className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-surface-container border-transparent focus:bg-surface-bright focus:ring-2 focus:ring-primary focus:border-transparent transition-all text-sm text-on-surface"
               />
             </div>
 
@@ -147,19 +128,19 @@ export default function Auth() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center space-x-2 bg-forest-600 text-white py-4 rounded-2xl font-bold hover:bg-forest-700 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-forest-100 mt-6 disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full flex items-center justify-center space-x-2 bg-primary text-white py-4 rounded-2xl font-bold hover:bg-primary-dim hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-primary/20 mt-6 disabled:cursor-not-allowed disabled:opacity-60"
             >
               <span>{loading ? (isLogin ? 'Signing In…' : 'Creating Account…') : isLogin ? 'Sign In' : 'Create Account'}</span>
               <ArrowRight size={18} />
             </button>
           </form>
 
-          <p className="text-center mt-10 text-sm text-gray-500 font-medium">
+          <p className="text-center mt-10 text-sm text-on-surface-variant font-medium">
             {isLogin ? "Don't have an account?" : "Already have an account?"}{' '}
             <button
               type="button"
               onClick={() => setIsLogin(!isLogin)}
-              className="text-forest-600 font-bold hover:underline"
+              className="text-primary font-bold hover:underline"
             >
               {isLogin ? 'Sign Up' : 'Sign In'}
             </button>

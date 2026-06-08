@@ -1,0 +1,667 @@
+This file is a bundled version of the repository, intended for use by AI models for code analysis and understanding.
+
+<repository>
+  <file path="package.json">
+{
+  "name": "react-example",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port=3000 --host=0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview",
+    "clean": "rm -rf dist server.js",
+    "lint": "tsc --noEmit",
+    "repack": "repomix"
+  },
+  "dependencies": {
+    "@google/genai": "^1.29.0",
+    "@supabase/supabase-js": "^2.105.4",
+    "@tailwindcss/vite": "^4.1.14",
+    "@vitejs/plugin-react": "^5.0.4",
+    "clsx": "^2.1.1",
+    "dotenv": "^17.2.3",
+    "express": "^4.21.2",
+    "lucide-react": "^0.546.0",
+    "motion": "^12.23.24",
+    "react": "^19.0.1",
+    "react-dom": "^19.0.1",
+    "react-router-dom": "^7.15.1",
+    "tailwind-merge": "^3.6.0",
+    "vite": "^6.2.3"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.14.0",
+    "autoprefixer": "^10.4.21",
+    "esbuild": "^0.25.0",
+    "repomix": "^0.2.25",
+    "tailwindcss": "^4.1.14",
+    "tsx": "^4.21.0",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.3"
+  }
+}
+  </file>
+
+  <file path="repomix.config.json">
+{
+  "output": {
+    "filePath": "repomix-output.xml",
+    "style": "xml",
+    "removeComments": false,
+    "removeEmptyLines": false,
+    "topFilesLength": 5
+  },
+  "include": [
+    "**/*"
+  ],
+  "ignore": {
+    "customPatterns": [
+      "node_modules/**",
+      "dist/**",
+      ".env*",
+      "*.log",
+      "package-lock.json",
+      "repomix-output.md",
+      "repomix-output.xml",
+      ".git/**"
+    ],
+    "useGitignore": true
+  }
+}
+  </file>
+
+  <file path="README.md">
+# EthioLib
+
+EthioLib is a modern digital library designed for Ethiopian students. It provides access to the new curriculum textbooks, teacher guides, and a wide range of fiction and non-fiction books.
+
+## Features
+
+- **Curriculum Access**: Textbooks and teacher guides for Grades 1-12.
+- **Search**: Quick search functionality for subjects, grades, or specific book titles.
+- **Personal Library**: User accounts to save favorites and organize reading lists.
+- **Dark Mode Support**: Comfortable reading experience in any lighting condition.
+- **Responsive Design**: Built with Tailwind CSS and Framer Motion for a seamless mobile and desktop experience.
+
+## Tech Stack
+
+- **Frontend**: React, TypeScript, Vite
+- **Styling**: Tailwind CSS
+- **Animations**: Framer Motion (motion/react)
+- **Backend/Auth**: Supabase
+- **Icons**: Lucide React
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (Latest LTS recommended)
+- A Supabase account for database and authentication.
+
+### Installation
+
+1. Clone the repository.
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Set up your environment variables by creating a `.env` file (refer to `SUPABASE_SETUP.md` for details).
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+## Documentation
+For detailed backend setup instructions, please see SUPABASE_SETUP.md.
+  </file>
+
+  <file path="SUPABASE_SETUP.md">
+# Setting up Supabase for EthioLib
+
+To use the database features of EthioLib, follow these steps:
+
+## 1. Create a Supabase Project
+1. Go to supabase.com and sign in.
+2. Click **New Project** and select your organization.
+3. Enter a project name (e.g., `EthioLib`), database password, and choose a region near you.
+4. Wait for the database to provision.
+
+## 2. Get your API Keys
+1. In your Supabase dashboard, go to **Project Settings** (gear icon) > **API**.
+2. Copy the **Project URL** and the **`anon` public API key**.
+3. Create a `.env` file in the root of your project or add them to the Secrets panel in AI Studio:
+   ```env
+   VITE_SUPABASE_URL=your_project_url
+   VITE_SUPABASE_ANON_KEY=your_anon_key
+   VITE_APP_URL=https://your-app-domain.com
+   ```
+   `VITE_APP_URL` ensures Supabase confirmation emails return users to your app instead of localhost.
+
+
+## 3. Run the SQL Schema
+Go to the **SQL Editor** in the side menu and run the following script to set up your tables:
+
+```sql
+-- Books table
+create table books (
+  id uuid default gen_random_uuid() primary key,
+  title text not null,
+  author text,
+  cover_url text,
+  category text, -- 'curriculum', 'fiction', 'non-fiction', etc.
+  grade_level integer, -- for curriculum books
+  is_teachers_guide boolean default false,
+  download_url text, -- external link to kehulum.com or similar
+  description text,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- Profiles table for user data
+create table profiles (
+  id uuid references auth.users on delete cascade primary key,
+  full_name text,
+  avatar_url text,
+  favorite_books uuid[] default array[]::uuid[],
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- Enable Row Level Security (RLS)
+alter table books enable row level security;
+alter table profiles enable row level security;
+
+-- Policies for books (anyone can read)
+create policy "Books are viewable by everyone" on books
+  for select using (true);
+
+-- Policies for profiles
+create policy "Users can view their own profile" on profiles
+  for select using (auth.uid() = id);
+
+create policy "Users can update their own profile" on profiles
+  for update using (auth.uid() = id);
+
+-- Function to handle new user profile creation
+create function public.handle_new_user()
+returns trigger as $$
+begin
+  insert into public.profiles (id, full_name, avatar_url)
+  values (new.id, new.raw_user_meta_data->>'full_name', new.raw_user_meta_data->>'avatar_url');
+  return new;
+end;
+$$ language plpgsql security definer;
+
+-- Trigger to create profile on signup
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute procedure public.handle_new_user();
+```
+
+## 4. Enable Google Login (Optional)
+1. Go to **Authentication** > **Providers** > **Google**.
+2. Enable it and follow the instructions to set up your Google Cloud Console credentials if you want social login.
+  </file>
+
+  <file path="metadata.json">
+{
+  "name": "EthioLib",
+  "description": "A modern digital library for Ethiopian students, providing access to the new curriculum textbooks, teacher guides, and a wide range of fiction and non-fiction books.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+  </file>
+
+  <file path="src/constants.ts">
+export interface Book {
+  id: string;
+  title: string;
+  author: string;
+  cover_url: string;
+  category: 'curriculum' | 'fiction' | 'non-fiction' | 'reference' | 'biography';
+  genre?: string;
+  grade_level?: number;
+  is_teachers_guide?: boolean;
+  download_url: string;
+  description: string;
+}
+
+export const CATEGORIES = [
+  { id: 'curriculum', name: 'Curriculum', icon: 'BookOpen' },
+  { id: 'fiction', name: 'Fiction', icon: 'Sparkles' },
+  { id: 'non-fiction', name: 'Non-Fiction', icon: 'Info' },
+  { id: 'reference', name: 'Reference', icon: 'Search' },
+  { id: 'biography', name: 'Biography', icon: 'User' },
+];
+
+export const FICTION_GENRES = [
+  'Historical',
+  'Mystery',
+  'Drama',
+  'Folklore',
+  'Romance',
+];
+
+export const CURRICULUM_BOOKS: Book[] = [
+  {
+    id: 'c1',
+    title: 'Amharic Student Textbook - Grade 9',
+    author: 'Ministry of Education',
+    cover_url: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=400',
+    category: 'curriculum',
+    grade_level: 9,
+    download_url: 'https://kehulum.com/textbook',
+    description: 'New curriculum Amharic textbook for Grade 9 students in Ethiopia.'
+  },
+  {
+    id: 'c2',
+    title: 'Mathematics Teacher Guide - Grade 11',
+    author: 'Ministry of Education',
+    cover_url: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80&w=400',
+    category: 'curriculum',
+    grade_level: 11,
+    is_teachers_guide: true,
+    download_url: 'https://kehulum.com/textbook',
+    description: 'Complete teaching guide for Grade 11 Mathematics following the new curriculum.'
+  },
+  {
+    id: 'c3',
+    title: 'Biology Student Textbook - Grade 12',
+    author: 'Ministry of Education',
+    cover_url: 'https://images.unsplash.com/photo-1532187863486-abf9d39d9992?auto=format&fit=crop&q=80&w=400',
+    category: 'curriculum',
+    grade_level: 12,
+    download_url: 'https://kehulum.com/textbook',
+    description: 'Grade 12 Biology student textbook aligned with MOE standards.'
+  },
+  {
+    id: 'c4',
+    title: 'Physics Student Textbook - Grade 10',
+    author: 'Ministry of Education',
+    cover_url: 'https://images.unsplash.com/photo-1636466497217-26a8cbeaf0aa?auto=format&fit=crop&q=80&w=400',
+    category: 'curriculum',
+    grade_level: 10,
+    download_url: 'https://kehulum.com/textbook',
+    description: 'Foundational Physics concepts for Grade 10 students.'
+  }
+];
+
+export const FICTION_BOOKS: Book[] = [
+  {
+    id: 'f1',
+    title: 'Oromay',
+    author: 'Bealu Girma',
+    cover_url: 'https://images.unsplash.com/photo-1589998059171-988d887df646?auto=format&fit=crop&q=80&w=400',
+    category: 'fiction',
+    genre: 'Historical',
+    download_url: '#',
+    description: 'A classic Ethiopian novel exploring complexity and human nature.'
+  },
+  {
+    id: 'f2',
+    title: 'Fikir Eske Mekabir',
+    author: 'Haddis Alemayehu',
+    cover_url: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&q=80&w=400',
+    category: 'fiction',
+    genre: 'Drama',
+    download_url: '#',
+    description: 'One of the greatest love stories in Ethiopian literature.'
+  }
+];
+
+export const NEW_ARRIVALS: Book[] = [
+  {
+    id: 'n1',
+    title: 'Sapiens: A Brief History of Humankind',
+    author: 'Yuval Noah Harari',
+    cover_url: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=80&w=400',
+    category: 'non-fiction',
+    genre: 'History',
+    download_url: '#',
+    description: 'Explores the history of humankind from the evolution of archaic human species in the Stone Age up to the twenty-first century.'
+  }
+];
+
+export const books = [...CURRICULUM_BOOKS, ...FICTION_BOOKS, ...NEW_ARRIVALS];
+  </file>
+
+  <file path="src/main.tsx">
+import {StrictMode} from 'react';
+import {createRoot} from 'react-dom/client';
+import App from './App.tsx';
+import './index.css';
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+);
+  </file>
+
+  <file path="src/App.tsx">
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Navigation from '@/src/components/Navigation';
+import Home from '@/src/pages/Home';
+import Education from '@/src/pages/Education';
+import Fiction from '@/src/pages/Fiction';
+import Auth from '@/src/pages/Auth';
+import Library from '@/src/pages/Library';
+import Search from '@/src/pages/Search';
+import { motion, AnimatePresence } from 'motion/react';
+import { AuthProvider } from '@/src/contexts/AuthContext';
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <div className="min-h-screen font-sans bg-surface text-on-surface transition-colors duration-300 selection:bg-accent/30 selection:text-primary">
+          <Navigation />
+          <main>
+            <AnimatePresence mode="wait">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/educational" element={<Education />} />
+                <Route path="/fiction" element={<Fiction />} />
+                <Route path="/auth" element={<Auth />} />
+                <Route path="/library" element={<Library />} />
+                <Route path="/search" element={<Search />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </AnimatePresence>
+          </main>
+        
+        {/* Simple Footer */}
+        <footer className="bg-surface border-t border-outline-variant py-12 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white">
+                <span className="font-bold text-lg">E</span>
+              </div>
+              <span className="text-lg font-bold text-on-surface">EthioLib</span>
+            </div>
+            <div className="flex space-x-8 text-sm font-medium text-on-surface-variant">
+              <a href="#" className="hover:text-[#2E6B55] transition-colors">Privacy</a>
+              <a href="#" className="hover:text-[#2E6B55] transition-colors">Terms</a>
+              <a href="#" className="hover:text-[#2E6B55] transition-colors">Contact</a>
+            </div>
+            <p className="text-sm text-on-surface-variant">
+              © {new Date().getFullYear()} EthioLib. Empowering Ethiopia's future.
+            </p>
+          </div>
+        </footer>
+      </div>
+    </Router>
+    </AuthProvider>
+  );
+}
+  </file>
+
+  <file path="src/components/Navigation.tsx">
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Book as BookIcon, Library, GraduationCap, Sparkles, User, Search, Menu, X, LogOut, Moon, Sun } from 'lucide-react';
+import { useState, FormEvent, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { cn } from '@/src/lib/utils';
+import { useAuth } from '@/src/contexts/AuthContext';
+
+const navItems = [
+  { name: 'Educational', path: '/educational', icon: GraduationCap },
+  { name: 'Fiction', path: '/fiction', icon: Sparkles },
+  { name: 'My Library', path: '/library', icon: Library },
+];
+
+export default function Navigation() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+  };
+
+  const handleSearch = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
+      setSearchQuery('');
+      setIsOpen(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    setIsOpen(false);
+  };
+
+  const getUserDisplay = () => {
+    if (user?.email) {
+      return user.email.split('@')[0];
+    }
+    return 'User';
+  };
+
+  return (
+    <nav className="sticky top-0 z-50 bg-surface/80 backdrop-blur-md border-b border-outline-variant">
+      {/* Desktop and Mobile navigation elements */}
+    </nav>
+  );
+}
+  </file>
+
+  <file path="src/components/Hero.tsx">
+import { motion } from 'motion/react';
+import { Search, GraduationCap, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+
+export default function Hero() {
+  return (
+    <section className="relative pt-20 pb-20 overflow-hidden">
+      {/* Hero content and background orbs */}
+    </section>
+  );
+}
+  </file>
+
+  <file path="src/components/BookCard.tsx">
+import { motion } from 'motion/react';
+import { Download, GraduationCap, ChevronRight } from 'lucide-react';
+import { Book } from '@/src/constants';
+import { cn } from '@/src/lib/utils';
+import { useState } from 'react';
+
+interface BookCardProps {
+  book: Book;
+  index: number;
+  key?: string | number;
+}
+
+export default function BookCard({ book, index }: BookCardProps) {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.05 }}
+      className="group relative bg-surface-bright rounded-2xl overflow-hidden border border-outline-variant transition-all hover:shadow-2xl hover:shadow-primary/10 flex flex-col h-full"
+    >
+      {/* Badge, Image Container, and Content */}
+    </motion.div>
+  );
+}
+  </file>
+
+  <file path="src/pages/Home.tsx">
+import Hero from '@/src/components/Hero';
+import BookCard from '@/src/components/BookCard';
+import { CURRICULUM_BOOKS, FICTION_BOOKS, CATEGORIES, NEW_ARRIVALS } from '@/src/constants';
+import { motion } from 'motion/react';
+import { ChevronRight, ArrowUpRight, BookOpen, Sparkles, Info, Search, User } from 'lucide-react';
+import { Link } from 'react-router-dom';
+
+export default function Home() {
+  const featuredEducational = CURRICULUM_BOOKS.slice(0, 4);
+  const featuredFiction = FICTION_BOOKS.slice(0, 4);
+
+  return (
+    <div className="bg-surface min-h-screen">
+      <Hero />
+      {/* Home sections: New Arrival, Categories, Featured Educational, CTA, and Fiction */}
+    </div>
+  );
+}
+  </file>
+
+  <file path="src/pages/Education.tsx">
+import { useState } from 'react';
+import { CURRICULUM_BOOKS } from '@/src/constants';
+import BookCard from '@/src/components/BookCard';
+import { motion } from 'motion/react';
+import { GraduationCap, Filter } from 'lucide-react';
+import { cn } from '@/src/lib/utils';
+
+export default function Education() {
+  const [selectedGrade, setSelectedGrade] = useState<number | 'all'>('all');
+  const [showGuides, setShowGuides] = useState(false);
+
+  const filteredBooks = CURRICULUM_BOOKS.filter(book => {
+    const gradeMatch = selectedGrade === 'all' || book.grade_level === selectedGrade;
+    const guideMatch = !showGuides || book.is_teachers_guide;
+    return gradeMatch && guideMatch;
+  });
+
+  return (
+    <div className="bg-surface min-h-screen pb-20">
+      {/* Education page structure: Header, Grade Filter, and Results Grid */}
+    </div>
+  );
+}
+  </file>
+
+  <file path="src/pages/Fiction.tsx">
+import { useState } from 'react';
+import { FICTION_BOOKS, FICTION_GENRES } from '@/src/constants';
+import BookCard from '@/src/components/BookCard';
+import { motion } from 'motion/react';
+import { Sparkles, ChevronRight } from 'lucide-react';
+import { cn } from '@/src/lib/utils';
+
+export default function Fiction() {
+  const [selectedGenre, setSelectedGenre] = useState<string | 'all'>('all');
+
+  const filteredBooks = FICTION_BOOKS.filter(book => 
+    selectedGenre === 'all' || book.genre === selectedGenre
+  );
+
+  return (
+    <div className="bg-surface min-h-screen pb-20">
+      {/* Fiction page structure: Header, Sidebar Filter, and Results Main */}
+    </div>
+  );
+}
+  </file>
+
+  <file path="src/pages/Auth.tsx">
+import { FormEvent, useState } from 'react';
+import { motion } from 'motion/react';
+import { Mail, Lock, User, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { getSupabase } from '@/src/lib/supabase';
+
+export default function Auth() {
+  const [isLogin, setIsLogin] = useState(true);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    // Supabase Auth logic for login and signup
+  };
+
+  return (
+    <div className="min-h-[calc(100vh-64px)] bg-surface flex items-center justify-center p-4">
+      {/* Auth form UI */}
+    </div>
+  );
+}
+  </file>
+
+  <file path="src/pages/Library.tsx">
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Heart, Trash2 } from 'lucide-react';
+import { motion } from 'motion/react';
+import { useAuth } from '@/src/contexts/AuthContext';
+import { getSupabase } from '@/src/lib/supabase';
+import BookCard from '@/src/components/BookCard';
+
+export default function Library() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [favorites, setFavorites] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/auth');
+      return;
+    }
+    fetchFavorites();
+  }, [user, navigate]);
+
+  const fetchFavorites = async () => {
+    // Logic to fetch favorite book IDs from profiles and then book details from books table
+  };
+
+  return (
+    <div className="bg-[#FAFAF7] min-h-[calc(100vh-64px)] pb-20">
+      {/* Library header and Favorites Grid with remove functionality */}
+    </div>
+  );
+}
+  </file>
+
+  <file path="src/pages/Search.tsx">
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { motion } from 'motion/react';
+import { Search as SearchIcon, ArrowLeft } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import BookCard from '@/src/components/BookCard';
+import { books as allBooks } from '@/src/constants';
+
+export default function Search() {
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get('query') || '';
+  const [results, setResults] = useState<typeof allBooks>([]);
+  const [isSearching, setIsSearching] = useState(false);
+
+  useEffect(() => {
+    // Filtering logic for allBooks based on the search query
+  }, [query]);
+
+  return (
+    <div className="min-h-screen bg-white pt-20 pb-12">
+      {/* Search page structure with back button, header, and results/no-results UI */}
+    </div>
+  );
+}
+  </file>
+</repository>

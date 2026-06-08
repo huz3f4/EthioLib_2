@@ -42,7 +42,7 @@ export default function Library() {
         .from('profiles')
         .select('favorite_books')
         .eq('id', user?.id)
-        .single();
+        .single() as { data: { favorite_books: string[] | null } | null, error: any };
 
       if (error || !profile) {
         console.error('Error fetching profile:', error);
@@ -83,7 +83,7 @@ export default function Library() {
         .from('profiles')
         .select('favorite_books')
         .eq('id', user?.id)
-        .single();
+        .single() as { data: { favorite_books: string[] | null } | null };
 
       if (!profile) return;
 
@@ -92,9 +92,9 @@ export default function Library() {
       );
 
       // Update the profile
-      const { error } = await supabase
-        .from('profiles')
-        .update({ favorite_books: updatedFavorites } as Record<string, unknown>)
+      const { error } = await (supabase
+        .from('profiles') as any)
+        .update({ favorite_books: updatedFavorites })
         .eq('id', user?.id);
 
       if (error) {

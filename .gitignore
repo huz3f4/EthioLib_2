@@ -6,3 +6,7 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# AI Context files
+repomix-output.xml
+repomix-output.md

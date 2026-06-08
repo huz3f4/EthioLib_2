@@ -7,7 +7,8 @@
     "dev": "vite --port=3000 --host=0.0.0.0",
     "build": "vite build",
     "preview": "vite preview",
-    "clean": "rm -rf dist server.js",
+    "clean": "rm -rf dist server.js repomix-output.xml",
+    "zip-prep": "npm run clean && rm -rf node_modules",
     "lint": "tsc --noEmit",
     "repack": "repomix"
   },

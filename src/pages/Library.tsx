@@ -5,16 +5,10 @@ import { motion } from 'motion/react';
 import { useAuth } from '@/src/contexts/AuthContext';
 import { getSupabase } from '@/src/lib/supabase';
 import BookCard from '@/src/components/BookCard';
-import { books as staticBooks } from '@/src/constants';
+import { Book } from '@/src/constants';
 
-interface Book {
-  id: string;
-  title: string;
-  author?: string;
-  cover_url?: string;
-  category?: string;
-  download_url?: string;
-  description?: string;
+interface Profile {
+  favorite_books: string[] | null;
 }
 
 export default function Library() {
@@ -42,7 +36,7 @@ export default function Library() {
         .from('profiles')
         .select('favorite_books')
         .eq('id', user?.id)
-        .single() as { data: { favorite_books: string[] | null } | null, error: any };
+        .single();
 
       if (error || !profile) {
         console.error('Error fetching profile:', error);
@@ -50,8 +44,8 @@ export default function Library() {
         return;
       }
 
-      // Get the favorite book IDs
-      const favoriteIds = (profile.favorite_books as string[]) || [];
+      const typedProfile = profile as Profile;
+      const favoriteIds = typedProfile.favorite_books || [];
 
       // Fetch the actual book details from the books table
       if (favoriteIds.length > 0) {
@@ -63,7 +57,7 @@ export default function Library() {
         if (booksError) {
           console.error('Error fetching books:', booksError);
         } else {
-          setFavorites(books || []);
+          setFavorites((books as Book[]) || []);
         }
       }
     } catch (error) {
@@ -83,17 +77,17 @@ export default function Library() {
         .from('profiles')
         .select('favorite_books')
         .eq('id', user?.id)
-        .single() as { data: { favorite_books: string[] | null } | null };
+        .single();
 
-      if (!profile) return;
+      if (!profile || !('favorite_books' in profile)) return;
 
-      const updatedFavorites = ((profile.favorite_books as string[]) || []).filter(
+      const currentFavorites = (profile as Profile).favorite_books || [];
+      const updatedFavorites = currentFavorites.filter(
         (id: string) => id !== bookId
       );
 
-      // Update the profile
-      const { error } = await (supabase
-        .from('profiles') as any)
+      const { error } = await supabase
+        .from('profiles')
         .update({ favorite_books: updatedFavorites })
         .eq('id', user?.id);
 
@@ -168,15 +162,7 @@ export default function Library() {
                 className="relative group"
               >
                 <BookCard
-                  book={{
-                    id: book.id,
-                    title: book.title || 'Untitled',
-                    author: book.author || 'Unknown',
-                    cover_url: book.cover_url || '',
-                    category: book.category || '',
-                    download_url: book.download_url || '',
-                    description: book.description || '',
-                  } as any}
+                  book={book}
                   index={idx}
                 />
                 <button

@@ -44,21 +44,23 @@ export default function Library() {
         return;
       }
 
-      const typedProfile = profile as Profile;
-      const favoriteIds = typedProfile.favorite_books || [];
+      const favoriteIds = (profile as Profile).favorite_books || [];
+
+      if (favoriteIds.length === 0) {
+        setFavorites([]);
+        return;
+      }
 
       // Fetch the actual book details from the books table
-      if (favoriteIds.length > 0) {
-        const { data: books, error: booksError } = await supabase
-          .from('books')
-          .select('*')
-          .in('id', favoriteIds);
+      const { data: books, error: booksError } = await supabase
+        .from('books')
+        .select('*')
+        .in('id', favoriteIds);
 
-        if (booksError) {
-          console.error('Error fetching books:', booksError);
-        } else {
-          setFavorites((books as Book[]) || []);
-        }
+      if (booksError) {
+        console.error('Error fetching books:', booksError);
+      } else {
+        setFavorites((books as Book[]) || []);
       }
     } catch (error) {
       console.error('Error fetching favorites:', error);
@@ -72,19 +74,10 @@ export default function Library() {
       const supabase = getSupabase();
       if (!supabase) return;
 
-      // Get current favorite books
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('favorite_books')
-        .eq('id', user?.id)
-        .single();
-
-      if (!profile || !('favorite_books' in profile)) return;
-
-      const currentFavorites = (profile as Profile).favorite_books || [];
-      const updatedFavorites = currentFavorites.filter(
-        (id: string) => id !== bookId
-      );
+      // Optimization: Filter from the existing local state instead of re-fetching from DB
+      const updatedFavorites = favorites
+        .filter((book) => book.id !== bookId)
+        .map((book) => book.id);
 
       const { error } = await supabase
         .from('profiles')

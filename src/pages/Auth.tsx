@@ -49,6 +49,9 @@ export default function Auth() {
           email,
           password,
           options: {
+            data: {
+              full_name: fullName,
+            },
             emailRedirectTo,
           },
         });

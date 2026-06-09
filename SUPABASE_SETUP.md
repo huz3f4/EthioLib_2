@@ -26,7 +26,7 @@ Go to the **SQL Editor** in the side menu and run the following script to set up
 ```sql
 -- Books table
 create table books (
-  id uuid default gen_random_uuid() primary key,
+  id text primary key,
   title text not null,
   author text,
   cover_url text,
@@ -43,7 +43,7 @@ create table profiles (
   id uuid references auth.users on delete cascade primary key,
   full_name text,
   avatar_url text,
-  favorite_books uuid[] default array[]::uuid[],
+  favorite_books text[] default array[]::text[],
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 

@@ -3,6 +3,7 @@ import { Download, GraduationCap, ChevronRight } from 'lucide-react';
 import { Book } from '@/src/constants';
 import { cn } from '@/src/lib/utils';
 import { useState } from 'react';
+import LikeButton from './LikeButton';
 
 interface BookCardProps {
   book: Book;
@@ -12,6 +13,8 @@ interface BookCardProps {
 
 export default function BookCard({ book, index }: BookCardProps) {
   const [isHovered, setIsHovered] = useState(false);
+
+  const fallbackImage = "https://images.unsplash.com/photo-1543005124-8198f56709a1?auto=format&fit=crop&q=80&w=400";
 
   return (
     <motion.div
@@ -36,10 +39,15 @@ export default function BookCard({ book, index }: BookCardProps) {
         </div>
       )}
 
+    {/* Like Button */}
+    <div className="absolute top-3 right-3 z-10">
+      <LikeButton bookId={book.id} />
+    </div>
+
       {/* Image Container */}
       <div className="relative aspect-[3/4] overflow-hidden">
         <img
-          src={book.cover_url}
+          src={book.cover_url || fallbackImage}
           alt={book.title}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
@@ -54,7 +62,7 @@ export default function BookCard({ book, index }: BookCardProps) {
           isHovered ? "opacity-100 scale-100" : "opacity-0 scale-95"
         )}>
           <a
-            href={book.download_url}
+            href={book.download_url || '#'}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center space-x-2 bg-surface-bright text-on-surface px-4 py-2 rounded-full text-sm font-semibold shadow-xl hover:bg-primary hover:text-white transition-colors"

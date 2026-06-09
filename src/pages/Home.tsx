@@ -1,9 +1,11 @@
+import { useState, useEffect } from 'react';
 import Hero from '@/src/components/Hero';
 import BookCard from '@/src/components/BookCard';
-import { CURRICULUM_BOOKS, FICTION_BOOKS, CATEGORIES, NEW_ARRIVALS } from '@/src/constants';
+import { CURRICULUM_BOOKS, FICTION_BOOKS, CATEGORIES, NEW_ARRIVALS, Book } from '@/src/constants';
 import { motion } from 'motion/react';
 import { ChevronRight, ArrowUpRight, BookOpen, Sparkles, Info, Search, User } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { getSupabase } from '@/src/lib/supabase';
 
 const iconMap = {
   BookOpen,
@@ -14,22 +16,59 @@ const iconMap = {
 };
 
 export default function Home() {
-  const featuredEducational = CURRICULUM_BOOKS.slice(0, 4);
-  const featuredFiction = FICTION_BOOKS.slice(0, 4);
+  const [educationalBooks, setEducationalBooks] = useState<Book[]>(CURRICULUM_BOOKS.slice(0, 4));
+  const [fictionBooks, setFictionBooks] = useState<Book[]>(FICTION_BOOKS.slice(0, 4));
+  const [newArrival, setNewArrival] = useState<Book | null>(NEW_ARRIVALS[0]);
+  const [categoryCounts, setCategoryCounts] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    const loadDynamicData = async () => {
+      const supabase = getSupabase();
+      if (!supabase) return;
+
+      // Fetch all books to calculate counts and featured sections
+      const { data: allBooks, error } = await supabase
+        .from('books')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching dynamic data:', error);
+        return;
+      }
+
+      if (allBooks && allBooks.length > 0) {
+        // Calculate real-time counts per category
+        const counts = allBooks.reduce((acc: Record<string, number>, book: any) => {
+          acc[book.category] = (acc[book.category] || 0) + 1;
+          return acc;
+        }, {});
+        setCategoryCounts(counts);
+
+        // Update featured sections dynamically
+        setEducationalBooks(allBooks.filter(b => b.category === 'curriculum').slice(0, 4));
+        setFictionBooks(allBooks.filter(b => b.category === 'fiction').slice(0, 4));
+        setNewArrival(allBooks[0]); // The latest book
+      }
+    };
+
+    loadDynamicData();
+  }, []);
 
   return (
     <div className="bg-surface min-h-screen">
       <Hero />
 
       {/* New Arrival Feature */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {newArrival && (
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-surface-container rounded-3xl p-8 flex flex-col md:flex-row items-center justify-between border border-outline-variant">
           <div className="mb-6 md:mb-0">
             <span className="inline-block bg-[#1E4035] text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4">
               New Arrival
             </span>
-            <h2 className="text-3xl font-black text-[#1E4035] mb-2">{NEW_ARRIVALS[0].title}</h2>
-            <p className="text-[#1E4035]/70 font-medium mb-6">{NEW_ARRIVALS[0].author} • History</p>
+            <h2 className="text-3xl font-black text-[#1E4035] mb-2">{newArrival.title}</h2>
+            <p className="text-[#1E4035]/70 font-medium mb-6">{newArrival.author} • {newArrival.genre || newArrival.category}</p>
             <Link 
               to="/fiction" 
               className="inline-flex items-center space-x-2 text-[#1E4035] font-bold border-b-2 border-[#1E4035] pb-1 hover:opacity-70 transition-opacity"
@@ -39,10 +78,11 @@ export default function Home() {
             </Link>
           </div>
           <div className="w-40 h-56 rotate-6 shadow-2xl rounded-lg overflow-hidden border-4 border-white">
-            <img src={NEW_ARRIVALS[0].cover_url} alt="Sapiens" className="w-full h-full object-cover" />
+            <img src={newArrival.cover_url} alt={newArrival.title} className="w-full h-full object-cover" />
           </div>
         </div>
       </section>
+      )}
 
       {/* Categories Grid */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -53,20 +93,28 @@ export default function Home() {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           {CATEGORIES.map((cat, idx) => {
             const Icon = iconMap[cat.icon as keyof typeof iconMap] || Info;
+            const path = cat.id === 'curriculum' ? '/educational' : cat.id === 'fiction' ? '/fiction' : `/search?query=${encodeURIComponent(cat.name)}`;
+            const bookCount = categoryCounts[cat.id] || 0;
+            
             return (
-              <motion.div
+              <Link
                 key={cat.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: idx * 0.1 }}
-                className="bg-surface-bright p-6 rounded-2xl border border-outline-variant hover:border-accent/40 hover:shadow-lg transition-all cursor-pointer group"
+                to={path}
+                className="block"
               >
-                <div className="w-12 h-12 bg-surface-container rounded-xl flex items-center justify-center text-on-surface-variant group-hover:bg-surface-dim group-hover:text-primary transition-colors mb-4">
-                  <Icon size={24} />
-                </div>
-                <h3 className="font-bold text-sm text-on-surface">{cat.name}</h3>
-                <p className="text-[10px] text-on-surface-variant mt-1">200+ Books</p>
-              </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.1 }}
+                  className="bg-surface-bright p-6 rounded-2xl border border-outline-variant hover:border-accent/40 hover:shadow-lg transition-all cursor-pointer group h-full"
+                >
+                  <div className="w-12 h-12 bg-surface-container rounded-xl flex items-center justify-center text-on-surface-variant group-hover:bg-surface-dim group-hover:text-primary transition-colors mb-4">
+                    <Icon size={24} />
+                  </div>
+                  <h3 className="font-bold text-sm text-on-surface">{cat.name}</h3>
+                  <p className="text-sm font-bold text-on-surface-variant mt-1">{bookCount} {bookCount === 1 ? 'Book' : 'Books'}</p>
+                </motion.div>
+              </Link>
             );
           })}
         </div>
@@ -85,7 +133,7 @@ export default function Home() {
           </Link>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
-          {featuredEducational.map((book, idx) => (
+          {educationalBooks.map((book, idx) => (
             <BookCard key={book.id} book={book} index={idx} />
           ))}
         </div>
@@ -123,7 +171,7 @@ export default function Home() {
           </Link>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
-          {featuredFiction.map((book, idx) => (
+          {fictionBooks.map((book, idx) => (
             <BookCard key={book.id} book={book} index={idx} />
           ))}
         </div>

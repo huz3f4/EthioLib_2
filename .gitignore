@@ -7,6 +7,6 @@ coverage/
 .env*
 !.env.example
 
-# AI Context files
+# Context files
 repomix-output.xml
 repomix-output.md

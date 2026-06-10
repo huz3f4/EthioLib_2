@@ -2,7 +2,7 @@ import { FormEvent, useState } from 'react';
 import { motion } from 'motion/react';
 import { Mail, Lock, User, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { getSupabase } from '@/src/lib/supabase';
+import { getSupabase } from '../lib/supabase';
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
@@ -12,7 +12,7 @@ export default function Auth() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const emailRedirectTo = (import.meta as any).env.VITE_APP_URL || window.location.origin;
+  const emailRedirectTo = import.meta.env.VITE_APP_URL || window.location.origin;
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

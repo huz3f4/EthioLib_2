@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Heart } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useAuth } from '@/src/contexts/AuthContext';
-import { getSupabase } from '@/src/lib/supabase';
+import { getSupabase } from '../lib/supabase';
 import { cn } from '@/src/lib/utils';
 
 interface LikeButtonProps {
@@ -12,6 +13,7 @@ interface LikeButtonProps {
 
 export default function LikeButton({ bookId, className }: LikeButtonProps) {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [isLiked, setIsLiked] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -40,8 +42,13 @@ export default function LikeButton({ bookId, className }: LikeButtonProps) {
     // Prevent navigation if the button is inside a Link
     e.preventDefault();
     e.stopPropagation();
-    
-    if (!user || loading) return;
+
+    if (!user) {
+      navigate('/auth');
+      return;
+    }
+
+    if (loading) return;
 
     const supabase = getSupabase();
     if (!supabase) return;
@@ -78,8 +85,6 @@ export default function LikeButton({ bookId, className }: LikeButtonProps) {
       setLoading(false);
     }
   };
-
-  if (!user) return null;
 
   return (
     <motion.button

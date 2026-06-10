@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Heart, Trash2 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useAuth } from '@/src/contexts/AuthContext';
-import { getSupabase } from '@/src/lib/supabase';
+import { getSupabase } from '../lib/supabase';
 import BookCard from '@/src/components/BookCard';
 import { Book } from '@/src/constants';
 
@@ -29,13 +29,13 @@ export default function Library() {
   const fetchFavorites = async () => {
     try {
       const supabase = getSupabase();
-      if (!supabase) return;
+      if (!supabase || !user) return;
 
       // Get user profile with favorite book IDs
       const { data: profile, error } = await supabase
         .from('profiles')
         .select('favorite_books')
-        .eq('id', user?.id)
+        .eq('id', user.id)
         .single();
 
       if (error || !profile) {
@@ -72,7 +72,7 @@ export default function Library() {
   const removeFavorite = async (bookId: string) => {
     try {
       const supabase = getSupabase();
-      if (!supabase) return;
+      if (!supabase || !user) return;
 
       // Optimization: Filter from the existing local state instead of re-fetching from DB
       const updatedFavorites = favorites
@@ -82,7 +82,7 @@ export default function Library() {
       const { error } = await supabase
         .from('profiles')
         .update({ favorite_books: updatedFavorites })
-        .eq('id', user?.id);
+        .eq('id', user.id);
 
       if (error) {
         console.error('Error updating favorites:', error);

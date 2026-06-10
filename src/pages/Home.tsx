@@ -5,7 +5,7 @@ import { CURRICULUM_BOOKS, FICTION_BOOKS, CATEGORIES, NEW_ARRIVALS, Book } from 
 import { motion } from 'motion/react';
 import { ChevronRight, ArrowUpRight, BookOpen, Sparkles, Info, Search, User } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { getSupabase } from '@/src/lib/supabase';
+import { getSupabase } from '../lib/supabase';
 
 const iconMap = {
   BookOpen,
@@ -20,6 +20,8 @@ export default function Home() {
   const [fictionBooks, setFictionBooks] = useState<Book[]>(FICTION_BOOKS.slice(0, 4));
   const [newArrival, setNewArrival] = useState<Book | null>(NEW_ARRIVALS[0]);
   const [categoryCounts, setCategoryCounts] = useState<Record<string, number>>({});
+
+  const fallbackImage = "https://images.unsplash.com/photo-1543005124-8198f56709a1?auto=format&fit=crop&q=80&w=400";
 
   useEffect(() => {
     const loadDynamicData = async () => {
@@ -67,8 +69,8 @@ export default function Home() {
             <span className="inline-block bg-[#1E4035] text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4">
               New Arrival
             </span>
-            <h2 className="text-3xl font-black text-[#1E4035] mb-2">{newArrival.title}</h2>
-            <p className="text-[#1E4035]/70 font-medium mb-6">{newArrival.author} • {newArrival.genre || newArrival.category}</p>
+            <h2 className="text-3xl font-black text-[#1E4035] mb-2">{newArrival.title || 'Untitled'}</h2>
+            <p className="text-[#1E4035]/70 font-medium mb-6">{newArrival.author || 'Unknown Author'} • {newArrival.genre || newArrival.category}</p>
             <Link 
               to="/fiction" 
               className="inline-flex items-center space-x-2 text-[#1E4035] font-bold border-b-2 border-[#1E4035] pb-1 hover:opacity-70 transition-opacity"
@@ -77,8 +79,8 @@ export default function Home() {
               <ArrowUpRight size={18} />
             </Link>
           </div>
-          <div className="w-40 h-56 rotate-6 shadow-2xl rounded-lg overflow-hidden border-4 border-white">
-            <img src={newArrival.cover_url} alt={newArrival.title} className="w-full h-full object-cover" />
+          <div className="w-40 h-56 rotate-6 shadow-2xl rounded-lg overflow-hidden border-4 border-white flex-shrink-0">
+            <img src={newArrival.cover_url || fallbackImage} alt={newArrival.title || 'Book Cover'} className="w-full h-full object-cover" />
           </div>
         </div>
       </section>

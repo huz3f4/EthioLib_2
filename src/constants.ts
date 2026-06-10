@@ -1,14 +1,14 @@
 export interface Book {
   id: string;
   title: string;
-  author: string;
-  cover_url: string;
+  author: string | null;
+  cover_url: string | null;
   category: 'curriculum' | 'fiction' | 'non-fiction' | 'reference' | 'biography';
   genre?: string;
-  grade_level?: number;
-  is_teachers_guide?: boolean;
-  download_url: string;
-  description: string;
+  grade_level?: number | null;
+  is_teachers_guide?: boolean | null;
+  download_url: string | null;
+  description: string | null;
 }
 
 export const CATEGORIES = [

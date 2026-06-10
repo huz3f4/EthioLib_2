@@ -96,23 +96,23 @@ export default function Library() {
 
   if (loading) {
     return (
-      <div className="min-h-[calc(100vh-64px)] bg-[#FAFAF7] flex items-center justify-center">
-        <div className="text-gray-500 font-bold">Loading your library...</div>
+      <div className="min-h-[calc(100vh-64px)] bg-surface flex items-center justify-center">
+        <div className="text-on-surface-variant font-bold">Loading your library...</div>
       </div>
     );
   }
 
   return (
-    <div className="bg-[#FAFAF7] min-h-[calc(100vh-64px)] pb-20">
+    <div className="bg-surface min-h-[calc(100vh-64px)] pb-20">
       {/* Header */}
-      <section className="bg-white border-b border-gray-100 py-12">
+      <section className="bg-surface-bright border-b border-outline-variant py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <h1 className="text-4xl font-black text-gray-900 mb-2">My Library</h1>
-            <p className="text-gray-500">
+            <h1 className="text-4xl font-black text-on-surface mb-2">My Library</h1>
+            <p className="text-on-surface-variant">
               {favorites.length} favorite {favorites.length === 1 ? 'book' : 'books'}
             </p>
           </motion.div>
@@ -127,19 +127,19 @@ export default function Library() {
             animate={{ opacity: 1 }}
             className="text-center py-20"
           >
-            <div className="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-              <Heart size={40} className="text-gray-300" />
+            <div className="w-20 h-20 bg-surface-container rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <Heart size={40} className="text-outline" />
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">
+            <h3 className="text-2xl font-bold text-on-surface mb-2">
               Your library is empty
             </h3>
-            <p className="text-gray-500 mb-8 max-w-md mx-auto">
+            <p className="text-on-surface-variant mb-8 max-w-md mx-auto">
               Start adding your favorite books from the Educational and Fiction sections.
               Tap the heart icon on any book to add it to your library.
             </p>
             <a
               href="/educational"
-              className="inline-flex items-center space-x-2 bg-[#1E4035] text-white px-6 py-3 rounded-2xl font-bold hover:bg-[#2E6B55] transition-all shadow-xl shadow-[#1E4035]/20"
+              className="inline-flex items-center space-x-2 bg-primary text-on-primary px-6 py-3 rounded-2xl font-bold hover:bg-primary-dim transition-all shadow-xl shadow-primary/20"
             >
               <span>Explore Books</span>
             </a>
@@ -160,7 +160,7 @@ export default function Library() {
                 />
                 <button
                   onClick={() => removeFavorite(book.id)}
-                  className="absolute top-2 right-2 p-2 bg-white rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="absolute top-2 right-2 p-2 bg-surface-bright rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
                   title="Remove from library"
                 >
                   <Trash2 size={16} className="text-red-500" />

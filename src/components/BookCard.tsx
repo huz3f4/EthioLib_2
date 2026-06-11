@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { Download, GraduationCap, ChevronRight } from 'lucide-react';
+import { GraduationCap, ChevronRight } from 'lucide-react';
 import { Book } from '@/src/constants';
 import { cn } from '@/src/lib/utils';
 import { useState } from 'react';
@@ -91,9 +91,6 @@ export default function BookCard({ book, index, onLikeToggle }: BookCardProps) {
             <GraduationCap size={14} />
             <span className="text-[10px] font-medium">Curriculum Authored</span>
           </div>
-          <button className="text-on-surface-variant hover:text-secondary transition-colors">
-            <Download size={16} />
-          </button>
         </div>
       </div>
     </motion.div>

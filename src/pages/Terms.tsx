@@ -1,18 +1,21 @@
 import { useState } from 'react';
-import { motion } from 'motion/react';
-import { ShieldCheck, FileText, AlertCircle, Info, Scale, Clock, Lock, Send } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import { ShieldCheck, FileText, AlertCircle, Info, Scale, Clock, Lock, Send, CheckCircle } from 'lucide-react';
 
 export default function Terms() {
   const [message, setMessage] = useState('');
+  const [status, setStatus] = useState<'idle' | 'success'>('idle');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!message.trim()) return;
 
     // Logic for handling the inquiry submission
-    console.log('Inquiry submitted:', message);
-    alert('Your message has been received. Our legal team will review it.');
+    setStatus('success');
     setMessage('');
+
+    // Reset status after 5 seconds to allow for another inquiry
+    setTimeout(() => setStatus('idle'), 5000);
   };
 
   return (
@@ -126,23 +129,48 @@ export default function Terms() {
               <h3 className="text-lg font-bold text-on-surface mb-2">Have questions about these terms?</h3>
               <p className="text-sm text-on-surface-variant mb-6">Type your inquiry below and our legal team will get back to you.</p>
               
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <textarea
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Write your question here..."
-                  rows={4}
-                  className="w-full p-4 rounded-2xl bg-surface-bright border border-outline-variant focus:ring-2 focus:ring-primary focus:outline-none text-sm text-on-surface transition-all resize-none"
-                  required
-                />
-                <button
-                  type="submit"
-                  className="inline-flex items-center space-x-2 bg-primary text-white px-8 py-3 rounded-xl font-bold hover:bg-primary-dim transition-all text-sm shadow-xl shadow-primary/20"
-                >
-                  <span>Send Inquiry</span>
-                  <Send size={16} />
-                </button>
-              </form>
+              <div className="relative min-h-[200px]">
+                <AnimatePresence mode="wait">
+                  {status === 'success' ? (
+                    <motion.div
+                      key="success"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="bg-green-500/10 border border-green-500/20 rounded-2xl p-8 flex flex-col items-center text-center space-y-3"
+                    >
+                      <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white mb-2 shadow-lg shadow-green-500/20">
+                        <CheckCircle size={24} />
+                      </div>
+                      <p className="text-sm font-bold text-on-surface">Your message has been received!</p>
+                      <p className="text-xs text-on-surface-variant max-w-xs">Our legal team will review your inquiry and get back to you shortly.</p>
+                    </motion.div>
+                  ) : (
+                    <motion.form 
+                      key="form"
+                      onSubmit={handleSubmit} 
+                      className="space-y-4"
+                      exit={{ opacity: 0, y: -10 }}
+                    >
+                      <textarea
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                        placeholder="Write your question here..."
+                        rows={4}
+                        className="w-full p-4 rounded-2xl bg-surface-bright border border-outline-variant focus:ring-2 focus:ring-primary focus:outline-none text-sm text-on-surface transition-all resize-none"
+                        required
+                      />
+                      <button
+                        type="submit"
+                        className="inline-flex items-center space-x-2 bg-primary text-white px-8 py-3 rounded-xl font-bold hover:bg-primary-dim transition-all text-sm shadow-xl shadow-primary/20"
+                      >
+                        <span>Send Inquiry</span>
+                        <Send size={16} />
+                      </button>
+                    </motion.form>
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
           </div>
         </motion.div>

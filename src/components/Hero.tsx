@@ -78,19 +78,6 @@ export default function Hero() {
             </Link>
           </motion.div>
         </div>
-
-        {/* Featured Sites Banner */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="flex flex-wrap items-center justify-center gap-8 md:gap-16 opacity-50 grayscale hover:grayscale-0 transition-all"
-        >
-          <span className="text-sm font-bold text-gray-400 uppercase tracking-widest">Resources from:</span>
-          <a href="https://kehulum.com" target="_blank" className="text-2xl font-black text-gray-800">Kehulum</a>
-          <a href="#" className="text-2xl font-black text-gray-800">MOE Ethiopia</a>
-          <a href="#" className="text-2xl font-black text-gray-800">EthioBooks</a>
-        </motion.div>
       </div>
     </section>
   );

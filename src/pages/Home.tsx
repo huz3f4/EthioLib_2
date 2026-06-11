@@ -162,7 +162,7 @@ export default function Home() {
       </section>
 
       {/* Featured Fiction */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 mb-20">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="flex items-end justify-between mb-10">
           <div>
             <h2 className="text-3xl font-black text-on-surface tracking-tight mb-2">Featured Fiction</h2>

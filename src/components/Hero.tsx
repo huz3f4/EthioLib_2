@@ -1,8 +1,19 @@
+import { useState, FormEvent } from 'react';
 import { motion } from 'motion/react';
 import { Search, GraduationCap, ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Hero() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
+
+  const handleSearch = (e: FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
+    }
+  };
+
   return (
     <section className="relative pt-20 pb-20 overflow-hidden">
       {/* Background Orbs */}
@@ -48,14 +59,16 @@ export default function Hero() {
             transition={{ delay: 0.3 }}
             className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4"
           >
-            <div className="relative w-full sm:w-auto min-w-[320px]">
+            <form onSubmit={handleSearch} className="relative w-full sm:w-auto min-w-[320px]">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
               <input
                 type="text"
                 placeholder="Search for subjects, grades or books..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-12 pr-6 py-4 rounded-2xl bg-white border border-gray-100 shadow-xl shadow-gray-100 focus:outline-none focus:ring-2 focus:ring-[#1E4035] transition-all"
               />
-            </div>
+            </form>
             <Link
               to="/educational"
               className="w-full sm:w-auto flex items-center justify-center space-x-2 bg-[#1E4035] text-white px-8 py-4 rounded-2xl font-bold hover:bg-[#2E6B55] hover:scale-105 active:scale-95 transition-all shadow-xl shadow-[#1E4035]/20"

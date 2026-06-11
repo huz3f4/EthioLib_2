@@ -1,7 +1,20 @@
+import { useState } from 'react';
 import { motion } from 'motion/react';
-import { ShieldCheck, FileText, AlertCircle, Info } from 'lucide-react';
+import { ShieldCheck, FileText, AlertCircle, Info, Scale, Clock, Lock, Send } from 'lucide-react';
 
 export default function Terms() {
+  const [message, setMessage] = useState('');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!message.trim()) return;
+
+    // Logic for handling the inquiry submission
+    console.log('Inquiry submitted:', message);
+    alert('Your message has been received. Our legal team will review it.');
+    setMessage('');
+  };
+
   return (
     <div className="bg-surface min-h-screen pb-20">
       {/* Header */}
@@ -69,20 +82,67 @@ export default function Terms() {
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-black">5. User Accounts</h2>
+            <div className="flex items-center space-x-3 text-primary mb-2">
+              <Lock size={24} />
+              <h2 className="text-2xl font-black">5. User Accounts</h2>
+            </div>
             <p className="text-on-surface-variant leading-relaxed">
               You are responsible for maintaining the confidentiality of your Supabase account credentials. We reserve the right to terminate accounts that violate these terms or participate in malicious activity.
             </p>
           </section>
 
+          <section className="space-y-4">
+            <div className="flex items-center space-x-3 text-primary mb-2">
+              <ShieldCheck size={24} />
+              <h2 className="text-2xl font-black">6. Data Privacy</h2>
+            </div>
+            <p className="text-on-surface-variant leading-relaxed">
+              Your privacy is important to us. User data is handled securely through Supabase. For more details on how we collect and use your information, please refer to our Privacy Policy.
+            </p>
+          </section>
+
+          <section className="space-y-4">
+            <div className="flex items-center space-x-3 text-primary mb-2">
+              <Scale size={24} />
+              <h2 className="text-2xl font-black">7. Limitation of Liability</h2>
+            </div>
+            <p className="text-on-surface-variant leading-relaxed">
+              EthioLib is provided "as is" without warranties of any kind. We are not liable for any direct or indirect damages arising from the use of this service or the unavailability of specific educational materials.
+            </p>
+          </section>
+
+          <section className="space-y-4">
+            <div className="flex items-center space-x-3 text-primary mb-2">
+              <Clock size={24} />
+              <h2 className="text-2xl font-black">8. Changes to Terms</h2>
+            </div>
+            <p className="text-on-surface-variant leading-relaxed">
+              We reserve the right to update these terms at any time. Significant changes will be notified via the platform or updated "Last updated" date at the top of this page.
+            </p>
+          </section>
+
           <div className="pt-10 border-t border-outline-variant">
-            <div className="bg-surface-container p-6 rounded-2xl flex flex-col md:flex-row items-center justify-between">
-              <p className="text-sm font-medium text-on-surface-variant mb-4 md:mb-0">
-                Have questions about these terms?
-              </p>
-              <button className="bg-primary text-white px-6 py-3 rounded-xl font-bold hover:bg-primary-dim transition-all text-sm">
-                Contact Legal Team
-              </button>
+            <div className="bg-surface-container p-8 rounded-[2rem] border border-outline-variant">
+              <h3 className="text-lg font-bold text-on-surface mb-2">Have questions about these terms?</h3>
+              <p className="text-sm text-on-surface-variant mb-6">Type your inquiry below and our legal team will get back to you.</p>
+              
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <textarea
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Write your question here..."
+                  rows={4}
+                  className="w-full p-4 rounded-2xl bg-surface-bright border border-outline-variant focus:ring-2 focus:ring-primary focus:outline-none text-sm text-on-surface transition-all resize-none"
+                  required
+                />
+                <button
+                  type="submit"
+                  className="inline-flex items-center space-x-2 bg-primary text-white px-8 py-3 rounded-xl font-bold hover:bg-primary-dim transition-all text-sm shadow-xl shadow-primary/20"
+                >
+                  <span>Send Inquiry</span>
+                  <Send size={16} />
+                </button>
+              </form>
             </div>
           </div>
         </motion.div>

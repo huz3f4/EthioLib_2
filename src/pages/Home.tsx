@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Hero from '@/src/components/Hero';
 import BookCard from '@/src/components/BookCard';
+import Footer from '@/src/components/Footer';
 import { CURRICULUM_BOOKS, FICTION_BOOKS, CATEGORIES, NEW_ARRIVALS, Book } from '@/src/constants';
 import { motion } from 'motion/react';
 import { ChevronRight, ArrowUpRight, BookOpen, Sparkles, Info, Search, User } from 'lucide-react';
@@ -178,6 +179,8 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      <Footer />
     </div>
   );
 }

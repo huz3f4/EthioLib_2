@@ -9,9 +9,10 @@ import { cn } from '@/src/lib/utils';
 interface LikeButtonProps {
   bookId: string;
   className?: string;
+  onToggle?: (isLiked: boolean) => void;
 }
 
-export default function LikeButton({ bookId, className }: LikeButtonProps) {
+export default function LikeButton({ bookId, className, onToggle }: LikeButtonProps) {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [isLiked, setIsLiked] = useState(false);
@@ -55,6 +56,7 @@ export default function LikeButton({ bookId, className }: LikeButtonProps) {
 
     const wasLiked = isLiked;
     setIsLiked(!wasLiked);
+    if (onToggle) onToggle(!wasLiked);
     setLoading(true);
 
     try {

@@ -9,9 +9,10 @@ interface BookCardProps {
   book: Book;
   index: number;
   key?: string | number;
+  onLikeToggle?: (isLiked: boolean) => void;
 }
 
-export default function BookCard({ book, index }: BookCardProps) {
+export default function BookCard({ book, index, onLikeToggle }: BookCardProps) {
   const [isHovered, setIsHovered] = useState(false);
 
   const fallbackImage = "https://images.unsplash.com/photo-1543005124-8198f56709a1?auto=format&fit=crop&q=80&w=400";
@@ -41,7 +42,7 @@ export default function BookCard({ book, index }: BookCardProps) {
 
     {/* Like Button */}
     <div className="absolute top-3 right-3 z-10">
-      <LikeButton bookId={book.id} />
+      <LikeButton bookId={book.id} onToggle={onLikeToggle} />
     </div>
 
       {/* Image Container */}

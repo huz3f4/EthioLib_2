@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Heart, Trash2 } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useAuth } from '@/src/contexts/AuthContext';
 import { getSupabase } from '../lib/supabase';
 import BookCard from '@/src/components/BookCard';
+import Footer from '@/src/components/Footer';
 import { Book } from '@/src/constants';
 
 interface Profile {
@@ -157,19 +158,17 @@ export default function Library() {
                 <BookCard
                   book={book}
                   index={idx}
+                  onLikeToggle={(isLiked) => {
+                    if (!isLiked) removeFavorite(book.id);
+                  }}
                 />
-                <button
-                  onClick={() => removeFavorite(book.id)}
-                  className="absolute top-2 right-2 p-2 bg-surface-bright rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
-                  title="Remove from library"
-                >
-                  <Trash2 size={16} className="text-red-500" />
-                </button>
               </motion.div>
             ))}
           </div>
         )}
       </section>
+
+      <Footer />
     </div>
   );
 }

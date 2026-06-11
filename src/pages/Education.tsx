@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { CURRICULUM_BOOKS } from '@/src/constants';
 import BookCard from '@/src/components/BookCard';
+import Footer from '@/src/components/Footer';
 import { motion } from 'motion/react';
 import { GraduationCap, Filter } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
@@ -116,6 +117,8 @@ export default function Education() {
           </div>
         )}
       </section>
+
+      <Footer />
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Book as BookIcon, Mail, Github, Globe } from 'lucide-react';
+import { Book as BookIcon, Globe } from 'lucide-react';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -19,14 +19,6 @@ export default function Footer() {
             <p className="text-on-surface-variant text-sm leading-relaxed mb-6">
               Empowering Ethiopian students with free access to the national curriculum and world-class literature.
             </p>
-            <div className="flex space-x-4">
-              <a href="#" className="p-2 bg-surface-container rounded-lg text-on-surface-variant hover:text-primary transition-colors">
-                <Mail size={18} />
-              </a>
-              <a href="#" className="p-2 bg-surface-container rounded-lg text-on-surface-variant hover:text-primary transition-colors">
-                <Github size={18} />
-              </a>
-            </div>
           </div>
 
           {/* Quick Links */}

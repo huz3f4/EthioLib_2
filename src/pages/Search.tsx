@@ -4,7 +4,6 @@ import { motion } from 'motion/react';
 import { Search as SearchIcon, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import BookCard from '@/src/components/BookCard';
-import Footer from '@/src/components/Footer';
 import { books as allBooks } from '@/src/constants';
 
 export default function Search() {
@@ -110,7 +109,6 @@ export default function Search() {
         )}
       </div>
 
-      <Footer />
     </div>
   );
 }

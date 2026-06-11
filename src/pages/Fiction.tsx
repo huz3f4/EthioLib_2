@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { FICTION_BOOKS, FICTION_GENRES } from '@/src/constants';
 import BookCard from '@/src/components/BookCard';
-import Footer from '@/src/components/Footer';
 import { motion } from 'motion/react';
 import { Sparkles, ChevronRight } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
@@ -96,7 +95,6 @@ export default function Fiction() {
         </main>
       </div>
 
-      <Footer />
     </div>
   );
 }

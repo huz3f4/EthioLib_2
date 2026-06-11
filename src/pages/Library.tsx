@@ -5,7 +5,6 @@ import { motion } from 'motion/react';
 import { useAuth } from '@/src/contexts/AuthContext';
 import { getSupabase } from '../lib/supabase';
 import BookCard from '@/src/components/BookCard';
-import Footer from '@/src/components/Footer';
 import { Book } from '@/src/constants';
 
 interface Profile {
@@ -168,7 +167,6 @@ export default function Library() {
         )}
       </section>
 
-      <Footer />
     </div>
   );
 }

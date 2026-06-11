@@ -4,12 +4,13 @@ import { motion } from 'motion/react';
 import { Search as SearchIcon, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import BookCard from '@/src/components/BookCard';
-import { books as allBooks } from '@/src/constants';
+import { books as fallbackBooks, Book } from '@/src/constants';
+import { getSupabase } from '../lib/supabase';
 
 export default function Search() {
   const [searchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
-  const [results, setResults] = useState<typeof allBooks>([]);
+  const [results, setResults] = useState<Book[]>([]);
   const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
@@ -20,18 +21,27 @@ export default function Search() {
 
     setIsSearching(true);
     
-    // Simulate a small delay for better UX
-    const timer = setTimeout(() => {
-      const lowerQuery = query.toLowerCase();
-      const filtered = allBooks.filter((book) => 
-        book.title?.toLowerCase().includes(lowerQuery) ||
-        book.author?.toLowerCase().includes(lowerQuery) ||
-        book.description?.toLowerCase().includes(lowerQuery)
-      );
-      setResults(filtered);
-      setIsSearching(false);
-    }, 300);
+    const performSearch = async () => {
+      const supabase = getSupabase();
+      if (!supabase) {
+        // Fallback to local constants if Supabase is unavailable
+        const lowerQuery = query.toLowerCase();
+        const filtered = fallbackBooks.filter(b => b.title.toLowerCase().includes(lowerQuery));
+        setResults(filtered);
+        setIsSearching(false);
+        return;
+      }
 
+      const { data } = await supabase
+        .from('books')
+        .select('*')
+        .or(`title.ilike.%${query}%,author.ilike.%${query}%,description.ilike.%${query}%`);
+
+      setResults((data as Book[]) || []);
+      setIsSearching(false);
+    };
+
+    const timer = setTimeout(performSearch, 300);
     return () => clearTimeout(timer);
   }, [query]);
 

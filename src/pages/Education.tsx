@@ -1,15 +1,34 @@
-import { useState } from 'react';
-import { CURRICULUM_BOOKS } from '@/src/constants';
+import { useState, useEffect } from 'react';
+import { CURRICULUM_BOOKS, Book } from '@/src/constants';
 import BookCard from '@/src/components/BookCard';
 import { motion } from 'motion/react';
 import { GraduationCap, Filter } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
+import { getSupabase } from '../lib/supabase';
 
 export default function Education() {
+  const [books, setBooks] = useState<Book[]>(CURRICULUM_BOOKS);
   const [selectedGrade, setSelectedGrade] = useState<number | 'all'>('all');
   const [showGuides, setShowGuides] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const filteredBooks = CURRICULUM_BOOKS.filter(book => {
+  useEffect(() => {
+    const fetchBooks = async () => {
+      const supabase = getSupabase();
+      if (!supabase) return;
+
+      const { data, error } = await supabase
+        .from('books')
+        .select('*')
+        .eq('category', 'curriculum');
+
+      if (data && !error) setBooks(data as Book[]);
+      setLoading(false);
+    };
+    fetchBooks();
+  }, []);
+
+  const filteredBooks = books.filter(book => {
     const gradeMatch = selectedGrade === 'all' || book.grade_level === selectedGrade;
     const guideMatch = !showGuides || book.is_teachers_guide;
     return gradeMatch && guideMatch;

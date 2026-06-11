@@ -69,6 +69,37 @@ export const CURRICULUM_BOOKS: Book[] = [
     download_url: 'https://kehulum.com/bfile_asset/books_92/collection/grade-10-physics-new-curriculum--student-textbook-kehulumcom17599255229e06.pdf',
     description: 'Foundational Physics concepts for Grade 10 students.'
   }
+  ,
+  {
+    id: 'c5',
+    title: 'Mathematics Student Textbook - Grade 9',
+    author: 'Ministry of Education',
+    cover_url: 'https://images.unsplash.com/photo-1509228468518-180dd482180c?auto=format&fit=crop&q=80&w=400',
+    category: 'curriculum',
+    grade_level: 9,
+    download_url: 'https://kehulum.com/downloads/grade9_math_textbook.pdf',
+    description: 'Comprehensive textbook covering algebra, geometry, and statistics.'
+  },
+  {
+    id: 'c6',
+    title: 'Physics Student Textbook - Grade 9',
+    author: 'Ministry of Education',
+    cover_url: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&q=80&w=400',
+    category: 'curriculum',
+    grade_level: 9,
+    download_url: 'https://kehulum.com/downloads/grade9_physics_textbook.pdf',
+    description: 'Fundamental concepts of mechanics, heat, and light.'
+  },
+  {
+    id: 'c7',
+    title: 'English Student Textbook - Grade 9',
+    author: 'Ministry of Education',
+    cover_url: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&q=80&w=400',
+    category: 'curriculum',
+    grade_level: 9,
+    download_url: 'https://kehulum.com/downloads/grade9_english_textbook.pdf',
+    description: 'Reading comprehension, writing, grammar, and vocabulary.'
+  }
 ];
 
 export const FICTION_BOOKS: Book[] = [

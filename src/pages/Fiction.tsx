@@ -1,14 +1,33 @@
-import { useState } from 'react';
-import { FICTION_BOOKS, FICTION_GENRES } from '@/src/constants';
+import { useState, useEffect } from 'react';
+import { FICTION_BOOKS, FICTION_GENRES, Book } from '@/src/constants';
 import BookCard from '@/src/components/BookCard';
 import { motion } from 'motion/react';
 import { Sparkles, ChevronRight } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
+import { getSupabase } from '../lib/supabase';
 
 export default function Fiction() {
+  const [books, setBooks] = useState<Book[]>(FICTION_BOOKS);
   const [selectedGenre, setSelectedGenre] = useState<string | 'all'>('all');
+  const [loading, setLoading] = useState(true);
 
-  const filteredBooks = FICTION_BOOKS.filter(book => 
+  useEffect(() => {
+    const fetchBooks = async () => {
+      const supabase = getSupabase();
+      if (!supabase) return;
+
+      const { data, error } = await supabase
+        .from('books')
+        .select('*')
+        .eq('category', 'fiction');
+
+      if (data && !error) setBooks(data as Book[]);
+      setLoading(false);
+    };
+    fetchBooks();
+  }, []);
+
+  const filteredBooks = books.filter(book => 
     selectedGenre === 'all' || book.genre === selectedGenre
   );
 
